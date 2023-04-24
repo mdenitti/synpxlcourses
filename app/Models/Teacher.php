@@ -4,8 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Badge;
 
 class Teacher extends Model
 {
     use HasFactory;
+
+    public function badge()
+    {
+        return $this->belongsTo(Badge::class);
+    }
 }
