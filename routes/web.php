@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,5 +14,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $courses = \App\Models\Course::all();
+    return view('welcome',compact('courses'));
+});
+
+
+Route::get('/test', function () {
+    dd(\App\Models\Student::whereHas('courses')->get());
+});
+
+Route::post('/postuser',function(Request $request){
+
+    //dd($request->all());
+    $validatedData = $request->validate([
+        'name' => 'required'
+    ]);
+    // create a new Student and post value from course to the pivot table
+    $student = \App\Models\Student::create($validatedData);
+    $student->courses()->attach($request->course);
+    return redirect()->back();
 });

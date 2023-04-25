@@ -11,6 +11,8 @@ class Student extends Model
 {
     use HasFactory;
 
+    // Mass assignment
+    protected $guarded = [];
     // belongstomany relation with course
     public function courses()
     {
