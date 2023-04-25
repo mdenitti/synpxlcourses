@@ -31,6 +31,6 @@ Route::post('/postuser',function(Request $request){
     ]);
     // create a new Student and post value from course to the pivot table
     $student = \App\Models\Student::create($validatedData);
-    $student->courses()->attach($request->course);
+    $student->courses()->attach($request->courses);
     return redirect()->back();
 });

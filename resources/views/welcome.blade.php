@@ -16,7 +16,7 @@
             @csrf
               <input name="name" type="text" class="form-control" placeholder="Enter your name">
 
-               <select name="course" class="form-control">
+               <select name="courses[]" multiple class="form-control mt-2">
                 @foreach ($courses as $course)
                     <option value="{{$course->id}}">{{$course->name}}</option>
                 @endforeach
