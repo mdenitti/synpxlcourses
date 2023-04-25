@@ -17,3 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+database/.DS_Store
+database/migrations/.DS_Store
+database/.DS_Store
