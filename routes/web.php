@@ -25,12 +25,25 @@ Route::get('/test', function () {
 
 Route::post('/postuser',function(Request $request){
 
-    //dd($request->all());
+    dd($request->all());
     $validatedData = $request->validate([
         'name' => 'required'
     ]);
     // create a new Student and post value from course to the pivot table
     $student = \App\Models\Student::create($validatedData);
     $student->courses()->attach($request->courses);
+    return redirect()->back();
+
+});
+
+// We could make this more dynamic by passing the student id as a parameter
+// Or we could also use a post request to delete the courses
+// In the post request, we would pass on the Student id and the course id's to delete
+// And catch them with the request object
+
+Route::get('/deletecourses', function(){
+    $student = \App\Models\Student::find(14);
+    //dd($student);
+    $student->courses()->detach([1,2,3]);
     return redirect()->back();
 });
