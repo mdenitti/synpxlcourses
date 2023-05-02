@@ -25,15 +25,16 @@ Route::get('/test', function () {
 
 Route::post('/postuser',function(Request $request){
 
-    dd($request->all());
+    // dd($request->all());
     $validatedData = $request->validate([
         'name' => 'required'
     ]);
     // create a new Student and post value from course to the pivot table
     $student = \App\Models\Student::create($validatedData);
     $student->courses()->attach($request->courses);
+    // session flash succes message
+    session()->flash('message','Student created successfully');
     return redirect()->back();
-
 });
 
 // We could make this more dynamic by passing the student id as a parameter
@@ -46,4 +47,11 @@ Route::get('/deletecourses', function(){
     //dd($student);
     $student->courses()->detach([1,2,3]);
     return redirect()->back();
+});
+
+Route::get('/getstudentnames', function(){
+    $students = \App\Models\Student::all();
+    foreach($students as $student){
+        echo $student->pronounce. '<br>';
+    }
 });
