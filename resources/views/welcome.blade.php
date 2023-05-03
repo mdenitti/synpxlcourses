@@ -13,16 +13,22 @@
     <div class="container">
 
        <div class="row">
-          @if(session()->has('message'))
+          @if(session()->has('succes'))
               <div class="alert alert-success">
-                  {{ session()->get('message') }}
+                  {{ session()->get('succes') }}
+              </div>
+          @endif
+
+           @if(session()->has('danger'))
+              <div class="alert alert-danger">
+                  {{ session()->get('danger') }}
               </div>
           @endif
 
             <form method="post" action="/postuser">
             @csrf
-              <input name="name" type="text" class="form-control" placeholder="Enter your name">
-
+              <input name="name" type="text" class="form-control mb-2" placeholder="Enter your name">
+              <input name="email" type="text" class="form-control mb-2" placeholder="Enter your email">    
                <select name="courses[]" multiple class="form-control mt-2">
                 @foreach ($courses as $course)
                     <option value="{{$course->id}}">{{$course->name}}</option>

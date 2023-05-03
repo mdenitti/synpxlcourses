@@ -24,16 +24,22 @@ Route::get('/test', function () {
 });
 
 Route::post('/postuser',function(Request $request){
-
     // dd($request->all());
     $validatedData = $request->validate([
-        'name' => 'required'
+        'name' => 'required',
+        'email' => 'required|email'
     ]);
-    // create a new Student and post value from course to the pivot table
-    $student = \App\Models\Student::create($validatedData);
+    // create a new Student with firstOrCreate method and pass the validated data
+    $student = \App\Models\Student::firstOrCreate($validatedData); 
+    // dd($student->wasRecentlyCreated);
+    // $student = \App\Models\Student::create($validatedData);
     $student->courses()->attach($request->courses);
     // session flash succes message
-    session()->flash('message','Student created successfully');
+    if ($student->wasRecentlyCreated) {
+        session()->flash('succes', 'Student created successfully');
+    } else {
+        session()->flash('danger', 'Student already exists. No new record created.');
+    }
     return redirect()->back();
 });
 
