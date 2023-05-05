@@ -24,11 +24,12 @@ Route::get('/test', function () {
 });
 
 Route::post('/postuser',function(Request $request){
-    // dd($request->all());
+    
     $validatedData = $request->validate([
         'name' => 'required',
         'email' => 'required|email'
     ]);
+
     // create a new Student with firstOrCreate method and pass the validated data
     $student = \App\Models\Student::firstOrCreate($validatedData); 
     // dd($student->wasRecentlyCreated);
@@ -40,6 +41,29 @@ Route::post('/postuser',function(Request $request){
     } else {
         session()->flash('danger', 'Student already exists. No new record created.');
     }
+
+    // send out a mail to the admin using the Mail::raw method
+    $stringData = implode(", ", $validatedData);
+    \Mail::raw('A new student has been created: '.$stringData, function($message){
+        $message->to('admin@myschool.be');
+        $message->subject('New student created');
+    });
+
+    // fetch the names of courses by using the id's of our request
+    $courses = \App\Models\Course::whereIn('id', $request->courses)->get();
+
+    // create a new array for usage in our e-mail blade templating view
+    $emaildata = [
+        'validatedData' => $validatedData,
+        'courses' => $courses
+    ];
+
+    // send out a HTML mail to client using the Mail::send method
+    // 1 view, 2 data , 3 callback to/cc/subject
+    \Mail::send('mails.welcome',$emaildata,function($m) use($request) {
+        $m->to($request->email)->subject('Welkom bij SyntraPXL '.$request->name);
+    });
+
     return redirect()->back();
 });
 
