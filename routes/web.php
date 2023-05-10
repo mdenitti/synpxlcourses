@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Mail\InformStudent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,9 +61,21 @@ Route::post('/postuser',function(Request $request){
 
     // send out a HTML mail to client using the Mail::send method
     // 1 view, 2 data , 3 callback to/cc/subject
-    \Mail::send('mails.welcome',$emaildata,function($m) use($request) {
+   
+   /*  \Mail::send('mails.welcome',$emaildata,function($m) use($request) {
         $m->to($request->email)->subject('Welkom bij SyntraPXL '.$request->name);
-    });
+    }); */
+
+    // send out mails with mailables
+    // convert $validatedData to an object
+    $validatedData = (object) $validatedData;
+    Mail::to($request->email)->send(new InformStudent($validatedData));
+
+
+
+
+
+
 
     return redirect()->back();
 });
